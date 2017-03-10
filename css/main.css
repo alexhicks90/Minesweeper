@@ -1,0 +1,80 @@
+
+body {
+	margin-left: 20px;
+	background: olive;
+}
+
+.tile {
+	background: lightslategray;
+	height: 15px;
+	width: 15px;
+	border-radius: 2px;
+	border: 1px solid black;
+	margin-right: 1px;
+	float: left;
+	cursor: pointer;
+}
+
+.mine {
+	background: red;
+	height: 13px;
+	width: 13px;
+	border: 1px solid black;
+	border-radius: 2px;
+	display: inline-block;
+	text-align: center;	
+	visibility: hidden;
+}
+
+.clean {
+	background: darkslategray;
+	height: 13px;
+	width: 13px;
+	border: 1px solid black;
+	border-radius: 2px;
+	display: inline-block;
+	text-align: center;	
+	visibility: hidden;
+}
+
+.flag {
+	height: 15px;
+	width: 15px;
+	border-radius: 2px;
+	border: 1px solid black;
+	margin-right: 1px;
+	float: left;	
+	background-image: url(../images/flag.png);
+}
+
+#lose {
+	height: 400px;
+	width: 400px;
+	background: black;
+	color: red;
+	text-align: center;
+	z-index: 5;
+	bottom: 20%;
+	left: 20%;	
+}
+
+#lose h2, #win h2 {
+	vertical-align: middle;
+	top: 50%;
+}
+
+#win {
+	height: 400px;
+	width: 400px;
+	background: green;
+	color: gold;
+	z-index: 5;
+	text-align: center;
+	bottom: 20%;
+	left: 20%;
+}
+
+#playAgain {
+	color: blue;
+	background: orange;
+}
