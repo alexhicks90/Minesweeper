@@ -145,7 +145,11 @@ if (button == 0 && !tile.classList.contains("flag")) {
 			break;
 	}
 
-	tile.firstChild.textContent = adjacentMines;
+	if (adjacentMines != 0) {
+		tile.firstChild.textContent = adjacentMines;
+	} else {
+		tile.firstChild.textContent = "";
+	}
 	tile.firstChild.style.visibility = "visible";
 	tilesClicked++;
 	checkWin(tilesClicked);
