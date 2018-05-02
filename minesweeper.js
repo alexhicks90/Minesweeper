@@ -56,7 +56,6 @@ function mineClick(tileCount, button) {
 
 function tileClick(tileCount, height, width, button) {
 
-console.log("Tilecount: " + tileCount);
 var tile = byId(tileCount);
 
 //left click - reveal tile
@@ -109,10 +108,8 @@ if (button == 0 && !tile.classList.contains("flag")) {
 		checkTiles = [(parseInt(tileCount) + width), (parseInt(tileCount) + width) - 1, tileCount - 1];
 	}
 
-	console.log(checkTiles);
 	for (var num = 0; num < checkTiles.length; num++) {
 		var t = byId(checkTiles[num]);
-		//console.log(t);
 		
 		if(t.firstChild.classList.contains("mine")) {
 			adjacentMines++;
@@ -155,13 +152,12 @@ if (button == 0 && !tile.classList.contains("flag")) {
 
 
 	if (adjacentMines == 0) {
-		//console.log("Adjacent mines are 0 on tile " + tile.id);
+
 		for (var i = 0; i < checkTiles.length; i++) {
 			var t = byId(checkTiles[i]);
 			
 			if(t.firstChild.style.visibility != "visible") {
 				tileClick(t.id, height, width, button);
-				//console.log("recursive tileclick");
 			}
 		}
 	}
@@ -194,7 +190,6 @@ function placeMines(mines, height, width) {
 			n--;
 		}
 	}
-	console.log(mineArray);
 }
 
 function placeNonMines(height, width) {
@@ -209,7 +204,6 @@ function placeNonMines(height, width) {
 				var tile = byId(tileCount);
 				var n = document.createElement("div");
 				n.className = "clean";
-				//console.log("Appending child: " + tileCount + "   height, width: " + height + ", " + width);
 				tile.appendChild(n);
 			}
 		}
@@ -221,7 +215,6 @@ function checkWin(tilesClicked) {
 	var nonMines = document.getElementsByClassName("clean");
 	
 	if(tilesClicked == nonMines.length) {
-		console.log("win");
 		setTimeout(function() {
 			gameOver(1);
 		}, 700);
