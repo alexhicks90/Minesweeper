@@ -1,8 +1,16 @@
 
+//MINE COUNTER
+var counter = document.getElementById("mineCount");
+var mineCount = 40;
+counter.innerHTML = mineCount;
+
+
+
 var board = document.getElementById("boardContainer");
 var byId = function( id ) { return document.getElementById( id ); };
 // disable context menu on game board to free up R-click for flags
 board.oncontextmenu = function(ev) {ev.preventDefault();};
+
 
 var tilesClicked = 0;
 
@@ -51,11 +59,20 @@ function mineClick(tileCount, button) {
 	} else if (button == 2) {
 		tile.classList.toggle("tile");
 		tile.classList.toggle("flag");
+
+		if (tile.classList.contains("flag")) {
+			mineCount--;		
+		} else {
+			mineCount++;
+		}
+		counter.innerHTML = mineCount;
+		checkWin(tilesClicked);
 	}
 }
 
 function tileClick(tileCount, height, width, button) {
 
+console.log("Tilecount: " + tileCount);
 var tile = byId(tileCount);
 
 //left click - reveal tile
@@ -66,38 +83,38 @@ if (button == 0 && !tile.classList.contains("flag")) {
 	// Populate checktiles array based on the position of the tile clicked
 	// Not on perimeter
 	if (tileCount <= (height * width) - width && tileCount > width && tileCount % width != 0 && tileCount % width != 1) {
-		checkTiles = [tileCount -1, tileCount - width -1, (parseInt(tileCount) + width) -1
-				, (parseInt(tileCount) + width), (parseInt(tileCount) + width +1),  tileCount - width +1
-				, tileCount - width , (parseInt(tileCount) + 1)];
+		checkTiles = [tileCount -1, tileCount - parseInt(width) -1, parseInt(tileCount) + parseInt(width) -1
+				, (parseInt(tileCount) + parseInt(width)), parseInt(tileCount) + parseInt(width) +1,  tileCount - parseInt(width) +1
+				, tileCount - parseInt(width) , (parseInt(tileCount) + 1)];
 
 	// bottom row, exclude corners
 	} else if (tileCount > (height * width) - width && tileCount % width != 0 && tileCount % width != 1) {
-		checkTiles = [tileCount -1, (parseInt(tileCount) + 1)
-			, tileCount - width, tileCount - width -1, tileCount - width +1];
+		checkTiles = [tileCount -1, parseInt(tileCount) + 1
+			, tileCount - width, tileCount - width -1, parseInt(tileCount) - parseInt(width) +1];
 	
 	// top row, exclude corners
 	} else if (tileCount <= width && tileCount % width != 0 && tileCount % width != 1) {
-		checkTiles = [tileCount -1, (parseInt(tileCount) + 1)
-				, (parseInt(tileCount) + width), (parseInt(tileCount) + width) -1, (parseInt(tileCount) + width +1)];
+		checkTiles = [tileCount -1, parseInt(tileCount) +1
+				, parseInt(tileCount) + parseInt(width), parseInt(tileCount) + parseInt(width) -1, parseInt(tileCount) + parseInt(width) + 1];
 	
 	// right column, exclude corners
 	} else if (tileCount % width == 0 && tileCount <= (height * width) - width && tileCount > width) {
-		checkTiles = [tileCount -1, tileCount - width -1, (parseInt(tileCount) + width) -1
-				, (parseInt(tileCount) + width), tileCount - width];
+		checkTiles = [tileCount -1, tileCount - width -1, parseInt(tileCount) + parseInt(width) -1
+				, parseInt(tileCount) + parseInt(width), tileCount - width];
 	
 	// left column, exclude corners
 	} else if (tileCount % width == 1 && tileCount <= (height * width) - width && tileCount > width) {
-		checkTiles = [(parseInt(tileCount) + width), (parseInt(tileCount) + width +1),  tileCount - width +1
-				, tileCount - width , (parseInt(tileCount) + 1)];
+		checkTiles = [parseInt(tileCount) + parseInt(width), parseInt(tileCount) + parseInt(width) +1,  parseInt(tileCount) - parseInt(width) +1
+				, tileCount - width , parseInt(tileCount) + 1];
 	
 	// bottom-left corner
 	} else if (tileCount % width == 1 && tileCount > (height * width) - width) {
-		checkTiles = [tileCount - width +1
-				, tileCount - width , (parseInt(tileCount) + 1)];
+		checkTiles = [parseInt(tileCount) - parseInt(width) +1
+				, tileCount - width , parseInt(tileCount) + 1];
 
 	// top-left corner
 	} else if (tileCount % width == 1 && tileCount <= width) {
-		checkTiles = [(parseInt(tileCount) + width), (parseInt(tileCount) + width +1), (parseInt(tileCount) + 1)];
+		checkTiles = [parseInt(tileCount) + parseInt(width), parseInt(tileCount) + parseInt(width) +1, parseInt(tileCount) + 1];
 
 	// bottom-right corner
 	} else if (tileCount % width == 0 && tileCount > (height * width) - width) {
@@ -105,11 +122,13 @@ if (button == 0 && !tile.classList.contains("flag")) {
 
 	// top-right corner
 	} else if (tileCount % width == 0 && tileCount <= width) {
-		checkTiles = [(parseInt(tileCount) + width), (parseInt(tileCount) + width) - 1, tileCount - 1];
+		checkTiles = [parseInt(tileCount) + parseInt(width), parseInt(tileCount) + parseInt(width) - 1, tileCount - 1];
 	}
 
+	console.log("CheckTiles: " + checkTiles);
 	for (var num = 0; num < checkTiles.length; num++) {
 		var t = byId(checkTiles[num]);
+		//console.log(t);
 		
 		if(t.firstChild.classList.contains("mine")) {
 			adjacentMines++;
@@ -147,37 +166,48 @@ if (button == 0 && !tile.classList.contains("flag")) {
 
 	if (adjacentMines != 0) {
 		tile.firstChild.textContent = adjacentMines;
-	} else {
-		tile.firstChild.textContent = "";
 	}
+
 	tile.firstChild.style.visibility = "visible";
 	tilesClicked++;
 	checkWin(tilesClicked);
 
-
+	// Recursive Tileclicks for all adjacent tiles with 0 adjacent mines
 	if (adjacentMines == 0) {
-
+		//console.log("Adjacent mines are 0 on tile " + tile.id);
 		for (var i = 0; i < checkTiles.length; i++) {
 			var t = byId(checkTiles[i]);
 			
 			if(t.firstChild.style.visibility != "visible") {
 				tileClick(t.id, height, width, button);
+				//console.log("recursive tileclick");
 			}
 		}
 	}
 
 // right click - place flag
 } else if (button == 2) {
-	tile.classList.toggle("tile");
-	tile.classList.toggle("flag");
+
+	if (tile.firstChild.style.visibility != "hidden") {
+
+		tile.classList.toggle("tile");
+		tile.classList.toggle("flag");
+
+		if (tile.classList.contains("flag")) {
+			mineCount--;		
+		} else {
+			mineCount++;
+		}
+		counter.innerHTML = mineCount;
+	}	
 }
 
 }
 
 var mineArray = [];
 
-// Generates a random number from 1 to the number of tiles on the board 
-// and adds a "mine" to the tile with the associated div id
+// Generates an array of random numbers from 1 to the number of tiles on the board 
+// Adds a "mine" to each tile with a matching id to numbers in the array
 function placeMines(mines, height, width) {	
 
 	for (var n = 0; n < mines; n++) {
@@ -194,6 +224,7 @@ function placeMines(mines, height, width) {
 			n--;
 		}
 	}
+	console.log(mineArray);
 }
 
 function placeNonMines(height, width) {
@@ -208,6 +239,7 @@ function placeNonMines(height, width) {
 				var tile = byId(tileCount);
 				var n = document.createElement("div");
 				n.className = "clean";
+				//console.log("Appending child: " + tileCount + "   height, width: " + height + ", " + width);
 				tile.appendChild(n);
 			}
 		}
@@ -217,8 +249,9 @@ function placeNonMines(height, width) {
 // Checks if win conditions are satisfied - displays win screen if they are
 function checkWin(tilesClicked) {
 	var nonMines = document.getElementsByClassName("clean");
-	
-	if(tilesClicked == nonMines.length) {
+
+	if(tilesClicked == nonMines.length && mineCount == 0) {
+		//console.log("win");
 		setTimeout(function() {
 			gameOver(1);
 		}, 700);
@@ -226,14 +259,17 @@ function checkWin(tilesClicked) {
 }
 
 function gameOver(status) {
+
 	if(status == 0) {
 		board.classList.add("lose");
 		board.innerHTML = "<div id='lose'><h2>Game Over!</h2><button id='playAgain'></button></div>";
+	
 	} else if (status == 1) {
 		board.classList.add("win");
 		board.innerHTML = "<div id='win'><h2>You Won!</h2><button id='playAgain'></button></div>";
+
 	}
-	
+
 	var playAgain = document.getElementById("playAgain");
 	playAgain.textContent = "Click to Play Again";
 	playAgain.onclick = function() {
@@ -247,8 +283,15 @@ function newLine() {
 	board.appendChild(br);
 }
 
+
 function main() {
-	// placeholder values. Will add map options.
+
+	var title = document.createElement("h2");
+	var node = document.createTextNode("Alex's Pure Javascript Minesweeper");
+	title.appendChild(node);
+	//board.appendChild(title);
+
+	// placeholder values for intermediate. Will add extra difficulty options.
 	map(16,16,40);
 }
 

@@ -1,11 +1,29 @@
+#boardContainer {
+	line-height: 1;
+	box-sizing: initial;
+	padding-bottom: 3em;
+	text-align: center;
 
-body {
-	margin-left: 20px;
-	background: olive;
 }
 
+
+#timer {
+	font-family: monospace;
+	background: black;
+	border: 1px red solid;
+	border-radius: 5px;
+	width: 120px;
+}
+
+#test {
+	border-radius: 10px;
+	
+	text-align: center;
+}
+
+
 .tile {
-	background: lightslategray;
+	background: rgba(119, 136, 153, 0.514);
 	height: 15px;
 	width: 15px;
 	border-radius: 2px;
@@ -17,6 +35,7 @@ body {
 
 .mine {
 	background: red;
+	font-family: arial;
 	height: 13px;
 	width: 13px;
 	border: 1px solid black;
@@ -28,6 +47,9 @@ body {
 
 .clean {
 	background: darkslategray;
+	font-family: Arial;
+	font-style: normal;
+	font-weight: normal;
 	height: 13px;
 	width: 13px;
 	border: 1px solid black;
